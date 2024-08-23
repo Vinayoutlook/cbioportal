@@ -29,10 +29,11 @@ pipeline {
         //REGION = 'us-west-2'
         REGION = 'us-east-1'
         //ACCOUNT_NAME = credentials('account_name')
-        ACCOUNT_NAME = credentials('tksr')
+        ACCOUNT_NAME = 'administratortksr'
         //ACCOUNT_ID = credentials('account_id')
-        ACCOUNT_ID = credentials('tksr')
-        DOCKER_HOST = credentials("${dockerHostGetString(account:env.ACCOUNT_NAME)}")
+        ACCOUNT_ID = 'tksr'
+        //DOCKER_HOST = credentials("${dockerHostGetString(account:env.ACCOUNT_NAME)}")
+        DOCKER_HOST = credentials("${dockerHostGetString(account:env.ACCOUNT_ID)}")
     }
     tools {
         dockerTool 'docker'
@@ -45,6 +46,7 @@ pipeline {
                     downloadDependencies(
                             directory: ".dependencies",
                             repository:"gh-org-data-platform/terraform-aws-gh-dp-glue",
+                            //account:"${env.ACCOUNT_NAME}"
                             account:"${env.ACCOUNT_NAME}",
                             branch: "feature/EPPE-3738-TECHNICAL-ecbio-env-instance"
                     )
@@ -56,7 +58,8 @@ pipeline {
                 dir('terraform'){
                     initWorkspaceV2(
                             repo:"${env.GIT_URL}",
-                            account:"${env.ACCOUNT_NAME}",
+                            //account:"${env.ACCOUNT_NAME}"
+                            account:"${env.ACCOUNT_ID}",
                             env: "${params.TARGET_WORKSPACE}",
                             targetAccount: "${params.TARGET_ACCOUNT}"
                     )
