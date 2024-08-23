@@ -33,7 +33,8 @@ pipeline {
         DOCKER_HOST = credentials("${dockerHostGetString(account:env.ACCOUNT_NAME)}")
     }
     tools {
-        dockerTool 'myDocker'
+        dockerTool 'docker'
+        //dockerTool 'myDocker'
     }
     stages {
         stage('Download Dependencies'){
