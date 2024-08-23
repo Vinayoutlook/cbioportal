@@ -17,15 +17,19 @@ pipeline {
         )
         booleanParam(
             name: "CBIO_IMAGE",
-            defaultValue: false,
+            //defaultValue: false
+            defaultValue: true,
             description: "This will create image for the cbio & push to ECR"
         )
         booleanParam(name: 'APPLY', defaultValue: false, description: 'The infra will be applied to the chosen workspace.')
     }
     environment {
-        REGION = 'us-west-2'
-        ACCOUNT_NAME = credentials('account_name')
-        ACCOUNT_ID = credentials('account_id')
+        //REGION = 'us-west-2'
+        REGION = 'us-east-1'
+        //ACCOUNT_NAME = credentials('account_name')
+        ACCOUNT_NAME = credentials('administratortksr')
+        //ACCOUNT_ID = credentials('account_id')
+        ACCOUNT_ID = credentials('tksr')
         DOCKER_HOST = credentials("${dockerHostGetString(account:env.ACCOUNT_NAME)}")
     }
     tools {
