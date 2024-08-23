@@ -29,9 +29,9 @@ pipeline {
         //REGION = 'us-west-2'
         REGION = 'us-east-1'
         //ACCOUNT_NAME = credentials('account_name')
-        ACCOUNT_NAME = 'administratortksr'
+        ACCOUNT_NAME = credentials('tksr')
         //ACCOUNT_ID = credentials('account_id')
-        ACCOUNT_ID = 'tksr'
+        ACCOUNT_ID = credentials('tksr')
         //DOCKER_HOST = credentials("${dockerHostGetString(account:env.ACCOUNT_NAME)}")
         DOCKER_HOST = credentials("${dockerHostGetString(account:env.vinay1210)}")
     }
@@ -57,7 +57,8 @@ pipeline {
             steps{
                 dir('terraform'){
                     initWorkspaceV2(
-                            repo:"${env.GIT_URL}",
+                            //repo:"${env.GIT_URL}",
+                            repo:"https://github.com/Vinayoutlook/cbioportal.git",
                             //account:"${env.ACCOUNT_NAME}"
                             account:"${env.ACCOUNT_NAME}",
                             env: "${params.TARGET_WORKSPACE}",
