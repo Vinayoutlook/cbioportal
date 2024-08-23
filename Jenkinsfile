@@ -29,7 +29,7 @@ pipeline {
         //REGION = 'us-west-2'
         REGION = 'us-east-1'
         //ACCOUNT_NAME = credentials('account_name')
-        ACCOUNT_NAME = credentials('administratortksr')
+        ACCOUNT_NAME = credentials('tksr')
         //ACCOUNT_ID = credentials('account_id')
         ACCOUNT_ID = credentials('tksr')
         DOCKER_HOST = credentials("${dockerHostGetString(account:env.ACCOUNT_NAME)}")
