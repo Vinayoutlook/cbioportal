@@ -7,12 +7,14 @@ pipeline {
     parameters{
         choice(
                 name: 'TARGET_ACCOUNT',
-                choices: getSupportedAccounts(account:account_name),
+                //choices: getSupportedAccounts(account:account_name)
+                choices: getSupportedAccounts(account:ACCOUNT_NAME),
                 description: 'Infra deployment based on aws account'
         )
         choice(
                 name: 'TARGET_WORKSPACE',
-                choices: getEnvironmentList(account:account_name),
+                //choices: getSupportedAccounts(account:account_name)
+                choices: getEnvironmentList(account:ACCOUNT_NAME),
                 description: 'Infra deployment workspace'
         )
         booleanParam(
