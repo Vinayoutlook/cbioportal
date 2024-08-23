@@ -29,11 +29,11 @@ pipeline {
         //REGION = 'us-west-2'
         REGION = 'us-east-1'
         //ACCOUNT_NAME = credentials('account_name')
-        ACCOUNT_NAME = 'tksr'
+        ACCOUNT_NAME = 'root'
         //ACCOUNT_ID = credentials('account_id')
-        ACCOUNT_ID = 'tksr'
+        ACCOUNT_ID = 'vinay'
         //DOCKER_HOST = credentials("${dockerHostGetString(account:env.ACCOUNT_NAME)}")
-        DOCKER_HOST = credentials("${dockerHostGetString(account:env.ACCOUNT_ID)}")
+        DOCKER_HOST = credentials("${dockerHostGetString(account:env.ACCOUNT_NAME)}")
     }
     tools {
         dockerTool 'docker'
@@ -59,7 +59,7 @@ pipeline {
                     initWorkspaceV2(
                             repo:"${env.GIT_URL}",
                             //account:"${env.ACCOUNT_NAME}"
-                            account:"${env.ACCOUNT_ID}",
+                            account:"${env.ACCOUNT_NAME}",
                             env: "${params.TARGET_WORKSPACE}",
                             targetAccount: "${params.TARGET_ACCOUNT}"
                     )
