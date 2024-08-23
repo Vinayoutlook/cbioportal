@@ -1,0 +1,15 @@
+{
+  "custom_tabs": [
+    {
+      "title": "Data Export",
+      "id": "customTab1",
+      "location": "STUDY_PAGE",
+      "mountCallbackName": "renderCustomTab1",
+      "pathsToJs": ["/js/customTab1.js"],
+      "showWithMultipleStudies": true,
+      "unmountOnHide": false,
+      "hideAsync": "()=>{const excludedStudies = []; return window.studyViewPageStore.studyIds.every(studyId => !excludedStudies.includes(studyId))}"
+
+    }
+  ]
+}

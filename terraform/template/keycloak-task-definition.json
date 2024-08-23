@@ -1,0 +1,207 @@
+[
+  {
+    "name"        : "${name}",
+    "image"       : "${image}",
+    "essential"   : true,
+    "entrypoint" : [
+      "/bin/sh",
+      "-c",
+      "/opt/keycloak/bin/kc.sh build && /opt/keycloak/bin/kc.sh start --optimized --http-enabled=true",
+      "/var/lib/twistlock/fargate/defender",
+      "fargate",
+      "entrypoint"
+    ],
+    "dependsOn": [
+      {
+        "condition": "HEALTHY",
+        "containerName": "TwistlockDefender"
+      }
+    ],
+    "secrets" : [
+      {
+        "name": "KC_DB_USERNAME",
+        "valueFrom": "${KC_DB_USERNAME}"
+      },
+      {
+        "name": "KC_DB_PASSWORD",
+        "valueFrom": "${KC_DB_PASSWORD}"
+      },
+      {
+        "name": "KEYCLOAK_ADMIN",
+        "valueFrom": "${KEYCLOAK_ADMIN}"
+      },
+      {
+        "name": "KEYCLOAK_ADMIN_PASSWORD",
+        "valueFrom": "${KEYCLOAK_ADMIN_PASSWORD}"
+      }
+    ],
+    "environment" : [
+      {
+        "name": "KC_HOSTNAME_URL",
+        "value": "${KC_HOSTNAME_URL}"
+      },
+      {
+        "name": "KC_DB",
+        "value": "${KC_DB}"
+      },
+      {
+        "name": "KC_HEALTH_ENABLED",
+        "value": "true"
+      },
+      {
+        "name": "KC_METRICS_ENABLED",
+        "value": "true"
+      },
+      {
+        "name": "KC_PROXY",
+        "value": "${KC_PROXY}"
+      },
+      {
+        "name": "KC_DB_URL",
+        "value": "${KC_DB_URL}"
+      }
+    ],
+    "portMappings" : [
+      {
+        "protocol"      : "tcp",
+        "containerPort" : ${containerPort},
+        "hostPort "     : ${containerPort}
+      }
+    ],
+    "logConfiguration" : {
+      "logDriver" : "awslogs",
+      "options" : {
+        "awslogs-group"         : "${awslogs-group}",
+        "awslogs-stream-prefix" : "${awslogs-stream-prefix}",
+        "awslogs-region"       : "${awslogs-region}"
+      }
+    },
+    "volumesFrom": [
+      {
+        "readOnly": false,
+        "sourceContainer": "TwistlockDefender"
+      }
+    ],
+    "linuxParameters": {
+      "capabilities": {
+        "add": [
+          "SYS_PTRACE"
+        ]
+      }
+    }
+  },
+  {
+    "name"         : "TwistlockDefender",
+    "image"        : "registry-auth.twistlock.com/tw_pkktb1u52ml1wrkrvwiqmfeqhv5t4fr0/twistlock/defender:defender_32_00_161",
+    "essential"    : true,
+    "portMappings": [],
+    "secrets" : [
+      {
+        "name": "KC_DB_USERNAME",
+        "valueFrom": "${KC_DB_USERNAME}"
+      },
+      {
+        "name": "KC_DB_PASSWORD",
+        "valueFrom": "${KC_DB_PASSWORD}"
+      },
+      {
+        "name": "KEYCLOAK_ADMIN",
+        "valueFrom": "${KEYCLOAK_ADMIN}"
+      },
+      {
+        "name": "KEYCLOAK_ADMIN_PASSWORD",
+        "valueFrom": "${KEYCLOAK_ADMIN_PASSWORD}"
+      },
+      {
+        "name": "INSTALL_BUNDLE",
+        "valueFrom": "${INSTALL_BUNDLE}"
+      }
+    ],
+    "environment" : [
+      {
+        "name": "KC_HOSTNAME_URL",
+        "value": "${KC_HOSTNAME_URL}"
+      },
+      {
+        "name": "KC_DB",
+        "value": "${KC_DB}"
+      },
+      {
+        "name": "KC_HEALTH_ENABLED",
+        "value": "true"
+      },
+      {
+        "name": "KC_METRICS_ENABLED",
+        "value": "true"
+      },
+      {
+        "name": "KC_PROXY",
+        "value": "${KC_PROXY}"
+      },
+      {
+        "name": "KC_DB_URL",
+        "value": "${KC_DB_URL}"
+      },
+      {
+        "name": "TW_IMAGE_NAME",
+        "value": "${image}"
+      },
+      {
+        "name": "TW_CONTAINER_NAME",
+        "value": "${CONTAINER_NAME}"
+      },
+      {
+        "name": "DEFENDER_TYPE",
+        "value": "${DEFENDER_TYPE}"
+      },
+      {
+        "name": "FARGATE_TASK",
+        "value": "${CONTAINER_NAME}"
+      },
+      {
+        "name": "FILESYSTEM_MONITORING",
+        "value": "false"
+      },
+      {
+        "name": "FIPS_ENABLED",
+        "value": "false"
+      },
+      {
+        "name": "WS_ADDRESS",
+        "value": "${WS_ADDRESS}"
+      },
+      {
+        "name": "FILESYSTEM_MONITORING",
+        "value": "false"
+      },
+      {
+        "name": "FIPS_ENABLED",
+        "value": "false"
+      }
+    ],
+    "entryPoint": [
+      "/usr/local/bin/defender",
+      "fargate",
+      "sidecar"
+    ],
+    "healthCheck": {
+      "command": [
+        "/usr/local/bin/defender",
+        "fargate",
+        "healthcheck"
+      ],
+      "interval": 5,
+      "retries": 3,
+      "startPeriod": 1,
+      "timeout": 5
+    },
+    "logConfiguration" : {
+      "logDriver" : "awslogs",
+      "options" : {
+        "awslogs-group"         : "${awslogs-group}",
+        "awslogs-stream-prefix" : "${awslogs-stream-prefix}",
+        "awslogs-region"       : "${awslogs-region}"
+      }
+    }
+  }
+]

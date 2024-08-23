@@ -1,0 +1,34 @@
+{
+    "dpp": {
+        "prod": {
+          "role_arn": ""
+        }
+    },
+    "dpenp": {
+        "dev": {
+          "role_arn": "arn:aws:iam::617336469044:role/dev-cbio-iam-service-role"
+        },
+        "sqa": {
+          "role_arn": "arn:aws:iam::617336469044:role/sqa-platform-ecbio-iam-service-role"
+        },
+        "val": {
+          "role_arn": ""
+        }
+    },
+    "dpep": {
+        "prod": {
+          "role_arn": "arn:aws:iam::626645654318:role/prod-cbio-iam-service-role"
+        }
+    },
+    "dpnp": {
+        "dev": {
+          "role_arn": ""
+        },
+        "sqa": {
+          "role_arn": ""
+        },
+        "val": {
+          "role_arn": ""
+        }
+    }
+}

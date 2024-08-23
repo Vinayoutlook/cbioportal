@@ -1,0 +1,151 @@
+[
+  {
+    "name"         : "${name}",
+    "image"        : "${image}",
+    "essential"    : true,
+    "dependsOn": [
+      {
+        "condition": "HEALTHY",
+        "containerName": "TwistlockDefender"
+      }
+    ],
+    "secrets" : [
+        {
+          "name": "DOC_DB_USER",
+          "valueFrom": "${DOC_DB_USER}"
+        },
+        {
+          "name": "DOC_DB_PASSWORD",
+          "valueFrom": "${DOC_DB_PASSWORD}"
+        }
+    ],
+    "environment" : [
+      {
+        "name" : "SERVER_PORT",
+        "value" : "${SERVER_PORT}"
+      },
+      {
+        "name" : "JAVA_OPTS",
+        "value" : "${JAVA_OPTS}"
+      }
+    ],
+    "portMappings" : [
+      {
+        "protocol"      : "tcp",
+        "containerPort" : ${containerPort},
+        "hostPort"      : ${containerPort}
+      }
+    ],
+    "logConfiguration" : {
+      "logDriver" : "awslogs",
+        "options" : {
+          "awslogs-group"         : "${awslogs-group}",
+          "awslogs-stream-prefix" : "${awslogs-stream-prefix}",
+          "awslogs-region"       : "${awslogs-region}"
+        }
+    },
+    "volumesFrom": [
+      {
+        "readOnly": false,
+        "sourceContainer": "TwistlockDefender"
+      }
+    ],
+    "linuxParameters": {
+      "capabilities": {
+        "add": [
+          "SYS_PTRACE"
+        ]
+      }
+    }
+  },
+  {
+    "name"         : "TwistlockDefender",
+    "image"        : "registry-auth.twistlock.com/tw_pkktb1u52ml1wrkrvwiqmfeqhv5t4fr0/twistlock/defender:defender_32_00_161",
+    "essential"    : true,
+    "portMappings": [],
+    "secrets" : [
+      {
+        "name": "DOC_DB_USER",
+        "valueFrom": "${DOC_DB_USER}"
+      },
+      {
+        "name": "DOC_DB_PASSWORD",
+        "valueFrom": "${DOC_DB_PASSWORD}"
+      },
+      {
+        "name": "INSTALL_BUNDLE",
+        "valueFrom": "${INSTALL_BUNDLE}"
+      }
+    ],
+    "environment" : [
+      {
+        "name" : "SERVER_PORT",
+        "value" : "${SERVER_PORT}"
+      },
+      {
+        "name" : "JAVA_OPTS",
+        "value" : "${JAVA_OPTS}"
+      },
+      {
+        "name": "TW_IMAGE_NAME",
+        "value": "${image}"
+      },
+      {
+        "name": "TW_CONTAINER_NAME",
+        "value": "${CONTAINER_NAME}"
+      },
+      {
+        "name": "FARGATE_TASK",
+        "value": "${CONTAINER_NAME}"
+      },
+      {
+        "name": "FILESYSTEM_MONITORING",
+        "value": "false"
+      },
+      {
+        "name": "FIPS_ENABLED",
+        "value": "false"
+      },
+      {
+        "name": "DEFENDER_TYPE",
+        "value": "${DEFENDER_TYPE}"
+      },
+      {
+        "name": "WS_ADDRESS",
+        "value": "${WS_ADDRESS}"
+      },
+      {
+        "name": "FILESYSTEM_MONITORING",
+        "value": "false"
+      },
+      {
+        "name": "FIPS_ENABLED",
+        "value": "false"
+      }
+    ],
+    "entryPoint": [
+      "/usr/local/bin/defender",
+      "fargate",
+      "sidecar"
+    ],
+    "healthCheck": {
+      "command": [
+        "/usr/local/bin/defender",
+        "fargate",
+        "healthcheck"
+      ],
+      "interval": 5,
+      "retries": 3,
+      "startPeriod": 1,
+      "timeout": 5
+    },
+    "logConfiguration" : {
+      "logDriver" : "awslogs",
+      "options" : {
+        "awslogs-group"         : "${awslogs-group}",
+        "awslogs-stream-prefix" : "${awslogs-stream-prefix}",
+        "awslogs-region"       : "${awslogs-region}"
+      }
+    }
+  }
+]

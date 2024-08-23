@@ -1,0 +1,271 @@
+[
+  {
+    "name"        : "${name}",
+    "image"       :  "${image}",
+    "essential"   : true,
+    "entrypoint"  : [
+      "/bin/sh","-c", "/cbio-cmd.sh",
+      "/var/lib/twistlock/fargate/defender",
+      "fargate",
+      "entrypoint"
+    ],
+      "dependsOn": [
+        {
+          "condition": "HEALTHY",
+          "containerName": "TwistlockDefender"
+        }
+      ],
+      "secrets" : [
+        {
+          "name": "DB_USER",
+          "valueFrom": "${DB_USER}"
+        },
+        {
+          "name": "DB_PASSWORD",
+          "valueFrom": "${DB_PASSWORD}"
+        },
+        {
+          "name": "REDIS_PASSWORD",
+          "valueFrom": "${REDIS_PASSWORD}"
+        },
+        {
+          "name": "SAML_KEYSTORE_PASSWORD",
+          "valueFrom": "${SAML_KEYSTORE_PASSWORD}"
+        },
+        {
+          "name": "IDP_METADATA",
+          "valueFrom": "${IDP_METADATA}"
+        }
+      ],
+
+      "environment" : [
+        {
+          "name": "CACHE_TYPE",
+          "value": "${CACHE_TYPE}"
+        },
+        {
+          "name": "CACHE_ENDPOINT_API_KEY",
+          "value": "${CACHE_ENDPOINT_API_KEY}"
+        },
+        {
+          "name": "METADATA_ENTITY_ID",
+          "value": "${METADATA_ENTITY_ID}"
+        },
+        {
+          "name": "CONTEXT_PATH",
+          "value": "${CONTEXT_PATH}"
+        },
+        {
+          "name": "ENTITY_BASE_URL",
+          "value": "${ENTITY_BASE_URL}"
+        },
+        {
+          "name": "BASE_URL",
+          "value": "${BASE_URL}"
+        },
+        {
+          "name": "ENTITY_ID",
+          "value": "${ENTITY_ID}"
+        },
+        {
+          "name": "DB_TOMCAT_RESOURCE_NAME",
+          "value": "${DB_TOMCAT_RESOURCE_NAME}"
+        },
+        {
+          "name": "DB_CONNECTION",
+          "value": "${DB_CONNECTION}"
+        },
+        {
+          "name": "DB_CONNECTION_STRING",
+          "value": "${DB_CONNECTION_STRING}"
+        },
+        {
+          "name": "REDIS_LEADER_ADDRESS",
+          "value": "${REDIS_LEADER_ADDRESS}"
+        },
+        {
+          "name": "REDIS_FOLLOWER_ADDRESS",
+          "value": "${REDIS_FOLLOWER_ADDRESS}"
+        },
+        {
+          "name": "SESSION_SERVICE_URL",
+          "value": "${SESSION_SERVICE_URL}"
+        }
+      ],
+    "portMappings" : [
+      {
+        "protocol"      : "tcp",
+        "containerPort" : ${containerPort},
+        "hostPort "     : ${containerPort}
+      }
+    ],
+    "logConfiguration" : {
+      "logDriver" : "awslogs",
+      "options" : {
+        "awslogs-group"         : "${awslogs-group}",
+        "awslogs-stream-prefix" : "${awslogs-stream-prefix}",
+        "awslogs-region"       : "${awslogs-region}"
+      }
+    },
+    "volumesFrom": [
+      {
+        "readOnly": false,
+        "sourceContainer": "TwistlockDefender"
+      }
+    ],
+    "linuxParameters": {
+      "capabilities": {
+        "add": [
+          "SYS_PTRACE"
+        ]
+      },
+      "initProcessEnabled": true
+    }
+  },
+  {
+    "name"         : "TwistlockDefender",
+    "image"        : "registry-auth.twistlock.com/tw_pkktb1u52ml1wrkrvwiqmfeqhv5t4fr0/twistlock/defender:defender_32_00_161",
+    "essential"    : true,
+    "portMappings": [],
+    "secrets" : [
+      {
+        "name": "DB_USER",
+        "valueFrom": "${DB_USER}"
+      },
+      {
+        "name": "DB_PASSWORD",
+        "valueFrom": "${DB_PASSWORD}"
+      },
+      {
+        "name": "REDIS_PASSWORD",
+        "valueFrom": "${REDIS_PASSWORD}"
+      },
+      {
+        "name": "SAML_KEYSTORE_PASSWORD",
+        "valueFrom": "${SAML_KEYSTORE_PASSWORD}"
+      },
+      {
+        "name": "INSTALL_BUNDLE",
+        "valueFrom": "${INSTALL_BUNDLE}"
+      },
+      {
+        "name": "IDP_METADATA",
+        "valueFrom": "${IDP_METADATA}"
+      }
+    ],
+    "environment" : [
+      {
+        "name": "CACHE_TYPE",
+        "value": "${CACHE_TYPE}"
+      },
+      {
+        "name": "CACHE_ENDPOINT_API_KEY",
+        "value": "${CACHE_ENDPOINT_API_KEY}"
+      },
+      {
+        "name": "METADATA_ENTITY_ID",
+        "value": "${METADATA_ENTITY_ID}"
+      },
+      {
+        "name": "CONTEXT_PATH",
+        "value": "${CONTEXT_PATH}"
+      },
+      {
+        "name": "ENTITY_BASE_URL",
+        "value": "${ENTITY_BASE_URL}"
+      },
+      {
+        "name": "BASE_URL",
+        "value": "${BASE_URL}"
+      },
+      {
+        "name": "ENTITY_ID",
+        "value": "${ENTITY_ID}"
+      },
+      {
+        "name": "DB_TOMCAT_RESOURCE_NAME",
+        "value": "${DB_TOMCAT_RESOURCE_NAME}"
+      },
+      {
+        "name": "DB_CONNECTION",
+        "value": "${DB_CONNECTION}"
+      },
+      {
+        "name": "DB_CONNECTION_STRING",
+        "value": "${DB_CONNECTION_STRING}"
+      },
+      {
+        "name": "REDIS_LEADER_ADDRESS",
+        "value": "${REDIS_LEADER_ADDRESS}"
+      },
+      {
+        "name": "REDIS_FOLLOWER_ADDRESS",
+        "value": "${REDIS_FOLLOWER_ADDRESS}"
+      },
+      {
+        "name": "SESSION_SERVICE_URL",
+        "value": "${SESSION_SERVICE_URL}"
+      },
+      {
+        "name": "TW_IMAGE_NAME",
+        "value": "${image}"
+      },
+      {
+        "name": "TW_CONTAINER_NAME",
+        "value": "${CONTAINER_NAME}"
+      },
+      {
+        "name": "DEFENDER_TYPE",
+        "value": "${DEFENDER_TYPE}"
+      },
+      {
+        "name": "FARGATE_TASK",
+        "value": "${CONTAINER_NAME}"
+      },
+      {
+        "name": "FILESYSTEM_MONITORING",
+        "value": "false"
+      },
+      {
+        "name": "FIPS_ENABLED",
+        "value": "false"
+      },
+      {
+        "name": "WS_ADDRESS",
+        "value": "${WS_ADDRESS}"
+      },
+      {
+        "name": "FILESYSTEM_MONITORING",
+        "value": "false"
+      },
+      {
+        "name": "FIPS_ENABLED",
+        "value": "false"
+      }
+    ],
+    "entryPoint": [
+      "/usr/local/bin/defender",
+      "fargate",
+      "sidecar"
+    ],
+    "healthCheck": {
+      "command": [
+        "/usr/local/bin/defender",
+        "fargate",
+        "healthcheck"
+      ],
+      "interval": 5,
+      "retries": 3,
+      "startPeriod": 1,
+      "timeout": 5
+    },
+    "logConfiguration" : {
+      "logDriver" : "awslogs",
+      "options" : {
+        "awslogs-group"         : "${awslogs-group}",
+        "awslogs-stream-prefix" : "${awslogs-stream-prefix}",
+        "awslogs-region"       : "${awslogs-region}"
+      }
+    }
+  }
+]
